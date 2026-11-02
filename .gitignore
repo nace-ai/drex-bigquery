@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+# A module leaves provider versions to the configuration that calls it
+terraform/.terraform.lock.hcl
+
+# Maintainers' local files, never published: the live gate against Google Cloud and production, and internal notes
+/tests/live/
+/.github/workflows/LiveTests.yml
+/docs/live-gate.md
+/docs/verification-report.md
+/docs/assets/README.md
+/docs/internal/
+batching.json

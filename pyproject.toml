@@ -1,0 +1,45 @@
+[project]
+name = "drex-bigquery"
+version = "0.1.0"
+description = "Drex integration for BigQuery: remote functions backed by a Cloud Run function"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "functions-framework==3.10.2",
+    "httpx==0.28.1",
+    "nace-sdk==0.6.2",
+]
+
+[dependency-groups]
+dev = [
+    "jsonschema==4.26.0",
+    "pytest==9.2.0",
+    "pytest-timeout==2.4.0",
+    "ruff==0.17.3",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["function", "tests/mock"]
+timeout = 120
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "ASYNC", "RUF"]
+ignore = ["S101", "S311"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/mock/*" = ["S", "E501", "B", "UP", "RUF", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["drex_bigquery"]
+
+[tool.ruff.format]
+exclude = ["tests/mock/*"]

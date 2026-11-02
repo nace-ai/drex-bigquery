@@ -1,0 +1,69 @@
+#
+# The function's tests against the mock Drex API (tests/mock/drex_mock.py), and the Terraform checks. Nothing here
+# reaches Drex or Google Cloud.
+#
+name: CI
+on:
+  # A pull request runs on its pull_request event alone, not again for the push
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  function:
+    name: Function tests against the mock
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: '3.12'
+
+      - name: Install
+        run: uv sync --locked
+
+      - name: Lint
+        run: |
+          uv run ruff format --check function tests
+          uv run ruff check function tests
+
+      - name: Test
+        # jsonschema validates every mock response against Drex's schemas in tests/mock/openapi.json
+        run: uv run pytest -v
+
+  terraform:
+    name: Terraform validate and tflint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_wrapper: false
+
+      - uses: terraform-linters/setup-tflint@v6
+
+      - name: Format
+        run: terraform fmt -recursive -check -diff
+
+      - name: Validate
+        run: |
+          terraform -chdir=terraform init -backend=false -input=false
+          terraform -chdir=terraform validate
+
+      - name: tflint
+        env:
+          # The ruleset is downloaded from GitHub
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          tflint --init --config="$PWD/.tflint.hcl"
+          tflint --chdir=terraform --config="$PWD/.tflint.hcl"

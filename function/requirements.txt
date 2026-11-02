@@ -1,0 +1,4 @@
+# The Cloud Run function's dependencies, installed by Cloud Build when it deploys. Pinned, so a deploy is repeatable
+functions-framework==3.10.2
+httpx==0.28.1
+nace-sdk==0.6.2
