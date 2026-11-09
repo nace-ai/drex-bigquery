@@ -15,6 +15,8 @@ Ask typed questions about your data from BigQuery SQL. This repository deploys [
 as BigQuery remote functions, backed by a Cloud Run function, to classify text, score rows and read images, returning
 probabilities as SQL values.
 
+**Also from Drex:** [Drex Browser Use](https://github.com/nace-ai/drex-browser-harness-pub), an AI browser agent and MCP server. One sentence fills a DoorDash cart in 16 moves.
+
 [Getting started](#getting-started) · [API reference](docs/API.md) · [Development](#development)
 
 ## What it does
